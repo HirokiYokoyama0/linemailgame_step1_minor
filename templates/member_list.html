@@ -6,16 +6,36 @@
 <meta http-equiv="refresh" content="2;URL={{ url_for('load_member_list') }}">
 -->
 
+
 <p> 現在の参加メンバーは　</p>
 {% for member in MemberList_DB %}
 <p>
-    {{ member.username }} さん
-    
+    <div style="display:inline-flex">
+    <b>{{ member.username }} さん</b>
+    {% if member.prepare_flg == 0 %}
+
+      {% if member.username == myname %}
+     　　 
+        <form action="/memberlist_check" style="display:inline;" method="POST">
+        <input  type="submit"  name="BtnID" value="{{member.id}}" >
+        </form>←準備ができたらボタンを押してください
+          
+      {% endif %}
+   
+
+  {% else %}
+  　<font color="blue">   準備OK </font>
+  {% endif %}
+  </div> 
+<br>
 </p>
 {% endfor %}
 
 <br>
 <br>
+<br>
+
+{% if flg_start == 1 %}
 
 <p>このメンバーで開始しますか？（親の人のみが押してください）</p>
 <form action="/prepare" method="POST">
@@ -29,7 +49,7 @@
     <option value=1>ウルフ１人</option>
     <option value=2>ウルフ２人</option>
   </select>
-  <input class="submit-button" value="開始する" type="submit" id="button1" onsubmit=" func1()">
+  <input class="submit-button" value="開始する" type="submit" id="button1" >
 </form>
 
 
@@ -39,18 +59,8 @@
 <br>
 <a href="{{ url_for('memberlist_prepare') }}"><strong>親以外の人はこちらをクリック</strong></a>
 
-<script>
-    function func1() {
-      document.getElementById("button1").disabled = true;
-      <a href="{{ url_for('memberlist_prepare') }}">親以外の方はこちらをクリック</a>
-      return;
-    }
-
-</script>
-
-
 <br>
 <br>
-
+{% endif %}
 
 {% endblock %}

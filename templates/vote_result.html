@@ -27,35 +27,29 @@
   {% endif %}
   {% endfor %}
 
-<br>
+  <br>
 
 {% endfor %}
 
-<br>
-<br>
-
-<p> 今回のウルフは 　<strong>　{{ulf_of_name}}　</strong>　 さんでした。 </p>
-
-{#    
-{% for votenum in member_vote_list %}
-
-  {{ votenum }} 票
-
-{% endfor %}
-#}
-<br>
-<br>
+  <br>
+  <br>
 
 今回のウルフの人は
   {% for member3 in MemberList_DB %}
   {% if  member3.ulf_flg ==  1  %}
-  <strong> {{ member3.username }} さん </strong>
+  <strong> {{ member3.username}} </strong> さん
   {% endif %}
   {% endfor %}
 
   でした！
-<br>
-<br>
+
+  <br>
+  <br>
+  ウルフの人のワード　===> {{word_ulf}}
+  <br>
+  市民の人のワード　　===> {{word_shimin}}
+  <br>
+
 
 
 

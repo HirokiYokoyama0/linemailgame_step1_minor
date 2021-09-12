@@ -1,11 +1,13 @@
 import openpyxl
 import random
 
-def create_word():
+def create_word(GENRENUM):
 
   workbook = openpyxl.load_workbook('ワードウルフ_質問データベース_No1.xlsx')
 
-  sheet = workbook["General"]
+  #sheet = workbook["General"]
+  sheet=workbook.worksheets[GENRENUM-1]
+  print("sheet名",sheet)
   max_row_num = sheet.max_row
   word_data = []
 
@@ -38,3 +40,15 @@ def rand_ints_nodup(a, b, k):
     if not n in ns:
       ns.append(n)
   return ns
+
+
+def check_genre():
+  workbook = openpyxl.load_workbook('ワードウルフ_質問データベース_No1.xlsx')
+  sheets = workbook.sheetnames
+
+  print(sheets)
+
+  return sheets
+
+
+

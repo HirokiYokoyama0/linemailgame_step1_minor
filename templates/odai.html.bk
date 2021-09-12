@@ -3,17 +3,16 @@
 <p> 私のユーザ名は　{{myname}}　です </p>
 
 
-<p>あなたのお題・テーマ　<strong><h2> {{wordtheme}} </h2></strong> です</p>
+<p>あなたのお題・テーマ　<h2> {{wordtheme}} </h2> です</p>
 
-<p><u>話題・質問の例</u>　　(下記のような抽象的な質問をメンバーに投げかけてみてください。)</p>
+<p>話題・質問のヒント</p>
 "{{quest1}}"<br>
 "{{quest2}}"<br>
 "{{quest3}}"<br>
-<br><br><br><br>
+<br><br>
 
 
-<p>ウルフだと思う人を下記から選択してください。
-(親から合図があるまでは投票しないでください)</p>
+<p>ウルフだと思う人を下記から選択してください。</p>
 <form action="/vote" method="POST" enctype="multipart/form-data">
     <select name="sel">
         <option value="null" disabled selected>選択して下さい</option>
