@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- cssの読み込み -->
+<link rel="stylesheet" href="static/css/base.css">
+
+<p>■あなたにこんなメールがお気に入りの異性(女性Aさん) からLINEで届きました。
+
+<br>
+
+<div class="balloon1">
+<h4>
+{{mainmail}}
+</h4>
+</div>
+
+
+<p><u>●返答例</u><br>
+<div class="balloon2-left">
+１．{{ans1}}
+</div>
+<br>
+<div class="balloon2-left">
+２．{{ans2}}<br>
+</div>
+<br>
+<div class="balloon2-left">
+３．{{ans3}}<br>
+</div>
+<br>
+
+<div class="balloon2-left">
+４．{{ans4}}
+</div>
+
+<div class="balloon2-left">
+５．{{ans5}}
+</div>
+<br>
+
+<strong>
+<p>どのように返答するのがいいのか、わるいのかを下記の返答例をみながら５分間話し合ってください。<br>
+</strong>
+自分が男性なら、どんなふうに送るのか？<br>
+自分が女性なら、どんなふうに送られてきたら嬉しいのか？など
+<br>
+
+<!--コメントアウト
+<p>（任意/思いついたら）あなただったら、どんな返答をしますか？</p>
+<form action="/add_answer" method="POST">
+        <input type="text" name="username" placeholder="Enter your answer " size="36" required>
+        <input type="submit" value="返答登録">
+</form>
+-->
+<br>
+------------------------------------------------------------------------------<br>
+(親から合図があるまでは投票しないでください)
+話し合いの結果、
+<font color="blue">　<p>(1)この選択肢の中で、参加メンバーが一番投票<u>しなそうな</u>選択肢を選んでください　</font>
+<form action="/vote" method="POST" enctype="multipart/form-data">
+    <select name="sel">
+        <option value="null" disabled selected>選択して下さい</option>
+        {% for i in range(1,6) %}
+            <option value={{i}}>選択肢{{i}}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <br>
+    <font color="blue">　<p>(2)この選択肢の中で、一番返答として<u>最適だと思われるもの</u>を選んでください　</font> <br>
+        <select name="sel2">
+            <option value="null" disabled selected>選択して下さい</option>
+            {% for i in range(1,6) %}
+                <option value={{i}}>選択肢{{i}}</option>
+            {% endfor %}
+
+        </select>
+       
+    <div>
+        <input type="submit" value="送信">
+    </div>
+    ------------------------------------------------------------------------------
+
+</form>
+
+
+{% endblock %}

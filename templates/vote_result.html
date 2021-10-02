@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+  <!-- cssの読み込み -->
+<link rel="stylesheet" href="static/css/base.css">
 
 <!--コメントアウト
 <meta http-equiv="refresh" content="6;URL={{ url_for('result') }}">
@@ -9,27 +11,62 @@
 <p> 私のユーザ名は　{{myname}}　です </p>
 
 
-<p> 投票結果 </p>
+<p> 投票結果</p>
+{% for Vari in OtherVari %}
+<div class="balloon2-left">
+<b>選択肢1：{{Vari.ans1}}</b>
+</div>
+<br>
+    投票したのは→　
+    {% set ns = namespace(cnt=0) %}
+    {% for member in MemberList_DB %}
+    
+          {% if  member.to_vote_minor == 1  %}
+          {% set ns.cnt = ns.cnt + 1 %}
+          <font color="blue"> {{ member.username }}</font>さん
+          {% endif %}
+    {% endfor %}
+  　<br>
+    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br>  
 
-<!--コメントアウト
-<p>配列：{{ member_vote_list|e }}</p> 
--->
+<div class="balloon2-left">
+<b>選択肢2：{{Vari.ans2}}</b>
+</div>
+<br>
+    投票したのは→　
+    {% set ns = namespace(cnt=0) %}
+    {% for member in MemberList_DB %}
+    
+          {% if  member.to_vote_minor == 2  %}
+          {% set ns.cnt = ns.cnt + 1 %}
+          <font color="blue"> {{ member.username }}</font>さん
+          {% endif %}
+    {% endfor %}
+    <br>
+    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br>  
 
-{% for member in MemberList_DB %}
+<div class="balloon2-left">
+<b>選択肢3：{{Vari.ans3}}</b>
+</div>
+<br>
+    投票したのは→　
+    {% set ns = namespace(cnt=0) %}
+    {% for member in MemberList_DB %}
+          
+              {% if  member.to_vote_minor == 3  %}
+              {% set ns.cnt = ns.cnt + 1 %}
+              <font color="blue"> {{ member.username }}</font>さん
+              {% endif %}
+    {% endfor %}
+    <br>
+    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br> 
 
-　{# {{loop.index}}番目の #}
-　{{ member.username }} さん　          {{ member.vote_num }} 票
-　
-投票したのは　
-  {% for member2 in MemberList_DB %}
-  {% if  member.id ==  member2.to_vote  %}
-   {{ member2.username }} さん　
-  {% endif %}
-  {% endfor %}
 
-  <br>
+
 
 {% endfor %}
+
+
 
   <br>
   <br>
@@ -43,11 +80,6 @@
 
   でした！
 
-  <br>
-  <br>
-  ウルフの人のワード　===> {{word_ulf}}
-  <br>
-  市民の人のワード　　===> {{word_shimin}}
   <br>
 
 

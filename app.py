@@ -1,4 +1,3 @@
-from re import I
 from worddata_Excel import create_word,check_genre
 from flask import Flask, render_template, redirect, url_for,request,g
 
@@ -24,17 +23,17 @@ class MemberList(db.Model):
     comment = db.Column(db.String(128), nullable=False)
     vote_num = db.Column(db.Integer, nullable=False)
     ulf_flg = db.Column(db.Integer, nullable=False)
-    to_vote = db.Column(db.Integer, nullable=False)
-    to_vote2 = db.Column(db.Integer, nullable=False)
+    to_vote_minor = db.Column(db.Integer, nullable=False)
+    to_vote_major = db.Column(db.Integer, nullable=False)
     prepare_flg = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, username=None, comment=None, vote_num = 0 , ulf_flg = 0 ,to_vote = 0,to_vote2 = 0,prepare_flg = 0):
+    def __init__(self, username=None, comment=None, vote_num = 0 , ulf_flg = 0 ,to_vote_minor = 0,to_vote_major = 0,prepare_flg = 0):
         self.username = username
         self.comment = comment
         self.vote_num = vote_num
         self.ulf_flg = ulf_flg
-        self.to_vote = to_vote
-        self.to_vote2 = to_vote2
+        self.to_vote_minor = to_vote_minor
+        self.to_vote_major = to_vote_major
         self.prepare_flg = prepare_flg
 
     def __repr__(self):
@@ -49,26 +48,27 @@ class OtherVar(db2.Model):
     global_ulfnum = db.Column(db.Integer, nullable=False)
     wolf_number = db.Column(db.Integer, nullable=False)
     genre_number = db.Column(db.Integer, nullable=False)
-    word_ulf = db.Column(db.String(128), nullable=False)
-    word_shimin = db.Column(db.String(128), nullable=False)
-    quest1 = db.Column(db.String(256), nullable=True)
-    quest2 = db.Column(db.String(256), nullable=True)
-    quest3 = db.Column(db.String(256), nullable=True)
+    mainmail = db.Column(db.String(128), nullable=False)
+    ans1 = db.Column(db.String(128), nullable=False)
+    ans2 = db.Column(db.String(128), nullable=False)
+    ans3 = db.Column(db.String(128), nullable=False)
+    ans4 = db.Column(db.String(128), nullable=False)
+    ans5 = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, word_num = 0 , global_ulfnum = 0 ,wolf_number = 0 ,genre_number = 0 ,word_ulf = '' ,word_shimin = '',quest1 = '',quest2 = '',quest3 = ''):
+    def __init__(self, word_num = 0 , global_ulfnum = 0 ,wolf_number = 0 ,genre_number = 0 ,mainmail = '' ,ans1 = '',ans2 = '',ans3 = '',ans4 = '',ans5 = ''):
         self.word_num = word_num
         self.global_ulfnum = global_ulfnum
         self.wolf_number = wolf_number
         self.genre_number = genre_number
-        self.word_ulf = word_ulf
-        self.word_shimin = word_shimin
-        self.quest1 = quest1
-        self.quest2 = quest2
-        self.quest3 = quest3
+        self.mainmail = mainmail
+        self.ans1 = ans1
+        self.ans2 = ans2
+        self.ans3 = ans3
+        self.ans4 = ans4
+        self.ans5 = ans5
         
-
     def __repr__(self):
-        return f"id = {self.id},word_num = {self.word_num}, global_ulfnum={self.global_ulfnum}, word_ulf = {self.word_ulf}"
+        return f"id = {self.id},mainmail = {self.mainmail}"
 
 class OrignalGenreData(db3.Model):
     __tablename__ = 'OrignalGenreData'
@@ -86,9 +86,6 @@ word_num = 0 #wordを選択番号
 
 global_ulfnum = 0
 genre_number = 0
-
-word_Genre = ["一般","旅","食べ物"]
-
 
 @app.route('/') # メインページ
 def main():
@@ -112,15 +109,9 @@ def post():
     
     myname = session.get('username')
 
-    new_member = MemberList(username=request.form["username"],comment="",vote_num = 0 , ulf_flg = 0, to_vote = 0,to_vote2=0,prepare_flg=0)
+    new_member = MemberList(username=request.form["username"],comment="",vote_num = 0 , ulf_flg = 0, to_vote_minor = 0,to_vote_major=0,prepare_flg=0)
     db.session.add(new_member)
     db.session.commit()
-
-    #class型MemberListへ代入
-    #usr = MemberList(request.form["username"], 'はじめまして')
-    #print("user--->", usr)
-    #db.session.add(usr) # データを追加
-    #db.session.commit()
 
     MemberList_DB = db.session.query(MemberList).all() #デバッグ用
    
@@ -224,7 +215,7 @@ def odai_warifuri():
         db2.session.add(new1)
         db2.session.commit()
 
-        if ulfnum == 1 :
+        if ulfnum == 1 : #ウルフが一人の場合
 
             global_ulfnum = random.randint(1,listsize) #ここでウルフを決定する.
             MemberList_DB[global_ulfnum-1].ulf_flg = 1
@@ -239,31 +230,43 @@ def odai_warifuri():
         db.session.commit()
         
          #### エクセルファイルからワードを引っ張ってくる処理（これも親だけ実施する処理）
-        genre_number = int(request.form.get('genre_num'))
-        [word_data,word_max_row_num] = create_word(genre_number) #wordデータをエクセルから生成
+        #genre_number = int(request.form.get('genre_num'))
+        [word_data,word_max_row_num] = create_word(1) #wordデータをエクセルから生成
+      
         word_num = random.randint(0,len(word_data)-1) #ランダムにワードデータを一つ選択
+
+        print("word_data,word_num---->",word_data,word_num)
 
         OtherVari = db2.session.query(OtherVar).all()
         OtherVari[0].word_num = word_num
         OtherVari[0].global_ulfnum = global_ulfnum ####危険なくすべき
         OtherVari[0].wolf_number = ulfnum
-        OtherVari[0].word_ulf = word_data[word_num][0] #ウルフのときのお題
-        OtherVari[0].word_shimin = word_data[word_num][1] #市民のときのお題
+        OtherVari[0].mainmail = word_data[word_num][0] #　メール内容
+
+        if word_data[word_num][1] is None: #回答例1
+            OtherVari[0].ans1 = "" 
+        else:
+            OtherVari[0].ans1 = word_data[word_num][1] 
 
         if word_data[word_num][2] is None:
-            OtherVari[0].quest1 = "" #質問１
+            OtherVari[0].ans2 = "" 
         else:
-            OtherVari[0].quest1 = word_data[word_num][2] #質問１
+            OtherVari[0].ans2 = word_data[word_num][2] 
 
         if word_data[word_num][3] is None:
-            OtherVari[0].quest2 = "" #質問１
+            OtherVari[0].ans3 = "" 
         else:
-            OtherVari[0].quest2 = word_data[word_num][3] #質問１
+            OtherVari[0].ans3 = word_data[word_num][3]
 
         if word_data[word_num][4] is None:
-            OtherVari[0].quest3 = "" #質問１
+            OtherVari[0].ans4 = "" 
         else:
-            OtherVari[0].quest3 = word_data[word_num][4] #質問１
+            OtherVari[0].ans4 = word_data[word_num][4]
+        
+        if word_data[word_num][5] is None:
+            OtherVari[0].ans5 = "" 
+        else:
+            OtherVari[0].ans5 = word_data[word_num][5] 
    
         db2.session.commit()
     
@@ -287,15 +290,8 @@ def odai_haishin():
      content2 = db.session.query(MemberList).filter_by(username = myname).first()
 
      print("/odaihaishinnai ウルフNo→→　　",OtherVari[0].global_ulfnum)
-     print("/odaihaishinnai content2.ulf_flg-->",content2.ulf_flg)
-  
-     if  content2.ulf_flg == 1:
-            wordtheme = OtherVari[0].word_ulf #ウルフのときのお題配信処理
-     else:                                       
-            wordtheme = OtherVari[0].word_shimin #市民のときのお題配信処理
 
-
-     return render_template('odai.html',MemberList_DB = MemberList_DB,wordtheme = wordtheme,myname = myname,quest1 =  OtherVari[0].quest1,quest2 =  OtherVari[0].quest2,quest3 =  OtherVari[0].quest3)
+     return render_template('odai_mail.html',MemberList_DB = MemberList_DB,myname = myname,mainmail = OtherVari[0].mainmail,ans1 =  OtherVari[0].ans1,ans2 =  OtherVari[0].ans2,ans3 =  OtherVari[0].ans3,ans4 =  OtherVari[0].ans4,ans5 =  OtherVari[0].ans5)
 
 ## 投票結果 
 @app.route('/vote', methods=['POST']) 
@@ -303,27 +299,23 @@ def vote_result():
  
     myname = session.get('username')
     MemberList_DB = db.session.query(MemberList).all() #DBからメンバーリストを割り当てる
-    content = db.session.query(MemberList).filter_by(id=int(request.form.get('sel'))).first()
+    
+    #content = db.session.query(MemberList).filter_by(id=int(request.form.get('sel'))).first()
+    #content.vote_num = content.vote_num + 1
 
-    #print("content[0].vote_num",content.vote_num)  #デバッグモード
-    #print("MemberList_DB[0].vote_num",MemberList_DB[0].vote_num)  #デバッグモード
-
-    content.vote_num = content.vote_num + 1
     content2 = db.session.query(MemberList).filter_by(username = myname).first()
     #print("content---->",content)
     #print("content2---->",content2)
     
-    content2.to_vote = int(request.form.get('sel')) #誰に投票したかを入力
+    content2.to_vote_minor = int(request.form.get('sel')) #マイノリティ選択肢の投票入力
+    content2.to_vote_major = int(request.form.get('sel2')) #メジャー選択肢の投票入力
 
     db.session.commit()
     #print("content[0].vote_num コミット後",content.vote_num)  #デバッグモード
 
     OtherVari = db2.session.query(OtherVar).all()
-    ulf_of_name = MemberList_DB[OtherVari[0].global_ulfnum-1].username #ウルフの人の名前を代入
-    word_shimin=OtherVari[0].word_shimin
-    word_ulf=OtherVari[0].word_ulf
     
-    return render_template('vote_result.html',MemberList_DB = MemberList_DB, word_shimin = word_shimin,word_ulf =word_ulf,myname = myname)
+    return render_template('vote_result.html',MemberList_DB = MemberList_DB,OtherVari=OtherVari,myname = myname)
 
 
 ## ゲーム継続　→　メンバー一覧ページ　
@@ -331,14 +323,6 @@ def vote_result():
 def game_repeat():
 
     #リセット処理のため（継続のため）
-    global word_data #wordデータ格納用リセット
-    word_data = []
-    global word_num  #wordを選択番号
-    word_num = 0
-    global global_ulfnum
-    global_ulfnum = 0
-    global genre_number
-    genre_number = 0
     
     myname = session.get('username')
     MemberList_DB = db.session.query(MemberList).all()
@@ -346,14 +330,11 @@ def game_repeat():
     for member in MemberList_DB:
         member.vote_num=0
         member.ulf_flg=0
-        member.to_vote=0
-        member.to_vote2=0
+        member.to_vote_minor=0
+        member.to_vote_major=0
         member.prepare_flg=0
 
     db.session.commit()
-
-    OtherVari = db2.session.query(OtherVar).all()
-
     
     db2.session.query(OtherVar).delete() #OtherVarを削除 
     db2.session.commit()
@@ -389,7 +370,6 @@ def memberlist_prepare():
 
     OtherVari = db2.session.query(OtherVar).all()
     
-    
     if myname is None:
         print("ユーザ名がNoneになってしまっています")
         flg_none = '1'
@@ -410,12 +390,9 @@ def result():
     myname = session.get('username')
     MemberList_DB = db.session.query(MemberList).all() #DBからメンバーリストを割り当てる
 
-
     OtherVari = db2.session.query(OtherVar).all()
-    word_shimin=OtherVari[0].word_shimin
-    word_ulf=OtherVari[0].word_ulf
 
-    return render_template('vote_result.html',MemberList_DB =MemberList_DB,word_shimin = word_shimin,word_ulf = word_ulf,myname = myname)
+    return render_template('vote_result.html',MemberList_DB =MemberList_DB,OtherVari=OtherVari,myname = myname)
 
 ## 利用規約
 @app.route('/terms') 
