@@ -8,83 +8,134 @@
 -->
 
 
-<p> 私のユーザ名は　{{myname}}　です </p>
+<div class="balloon1">
+  お題メール
+  <h4>
+  {{mainmail}}
+  </h4>
+</div>
 
 
-<p> 投票結果</p>
+<p> ■投票結果</p>
+
 {% for Vari in OtherVari %}
 <div class="balloon2-left">
 <b>選択肢1：{{Vari.ans1}}</b>
 </div>
 <br>
-    投票したのは→　
-    {% set ns = namespace(cnt=0) %}
+    一番ありえないと思って投票した人は→　
+    {% set ns = namespace(minor_cnt=0,major_cnt=0) %}
     {% for member in MemberList_DB %}
     
           {% if  member.to_vote_minor == 1  %}
-          {% set ns.cnt = ns.cnt + 1 %}
+          {% set ns.minor_cnt = ns.minor_cnt + 1 %}
           <font color="blue"> {{ member.username }}</font>さん
           {% endif %}
+
+          {% if  member.to_vote_major == 1  %}
+          {% set ns.major_cnt = ns.major_cnt + 1 %}
+          {% endif %}
+
+
     {% endfor %}
   　<br>
-    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br>  
+    合計投票数 <font color="red">　<strong> {{ns.minor_cnt}} </strong></font>票です <br>
+    （参考）最適だと思われた投票数 <font color="blue">　<strong> {{ns.major_cnt}} </strong></font>票です <br>  
 
 <div class="balloon2-left">
 <b>選択肢2：{{Vari.ans2}}</b>
 </div>
 <br>
-    投票したのは→　
-    {% set ns = namespace(cnt=0) %}
+　　一番ありえないと思って投票した人は→　
+    {% set ns = namespace(minor_cnt=0,major_cnt=0) %}
     {% for member in MemberList_DB %}
     
           {% if  member.to_vote_minor == 2  %}
-          {% set ns.cnt = ns.cnt + 1 %}
+          {% set ns.minor_cnt = ns.minor_cnt + 1 %}
           <font color="blue"> {{ member.username }}</font>さん
           {% endif %}
+
+          {% if  member.to_vote_major == 2  %}
+          {% set ns.major_cnt = ns.major_cnt + 1 %}
+          {% endif %}
+
+
     {% endfor %}
-    <br>
-    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br>  
+  　<br>
+    合計投票数 <font color="red">　<strong> {{ns.minor_cnt}} </strong></font>票です <br>
+    （参考）最適だと思われた投票数 <font color="blue">　<strong> {{ns.major_cnt}} </strong></font>票です <br> 
 
 <div class="balloon2-left">
 <b>選択肢3：{{Vari.ans3}}</b>
 </div>
 <br>
-    投票したのは→　
-    {% set ns = namespace(cnt=0) %}
+　　　一番ありえないと思って投票した人は→　
+    {% set ns = namespace(minor_cnt=0,major_cnt=0) %}
     {% for member in MemberList_DB %}
+    
+          {% if  member.to_vote_minor == 3  %}
+          {% set ns.minor_cnt = ns.minor_cnt + 1 %}
+          <font color="blue"> {{ member.username }}</font>さん
+          {% endif %}
+
+          {% if  member.to_vote_major == 3  %}
+          {% set ns.major_cnt = ns.major_cnt + 1 %}
+          {% endif %}
+
+    {% endfor %}
+  　<br>
+    合計投票数 <font color="red">　<strong> {{ns.minor_cnt}} </strong></font>票です <br>
+    （参考）最適だと思われた投票数 <font color="blue">　<strong> {{ns.major_cnt}} </strong></font>票です <br> 
+
+    <div class="balloon2-left">
+      <b>選択肢4：{{Vari.ans4}}</b>
+    </div>
+      <br>
+      　　　一番ありえないと思って投票した人は→　
+          {% set ns = namespace(minor_cnt=0,major_cnt=0) %}
+          {% for member in MemberList_DB %}
           
-              {% if  member.to_vote_minor == 3  %}
-              {% set ns.cnt = ns.cnt + 1 %}
+                {% if  member.to_vote_minor == 4  %}
+                {% set ns.minor_cnt = ns.minor_cnt + 1 %}
+                <font color="blue"> {{ member.username }}</font>さん
+                {% endif %}
+      
+                {% if  member.to_vote_major == 4  %}
+                {% set ns.major_cnt = ns.major_cnt + 1 %}
+                {% endif %}
+                
+          {% endfor %}
+        　<br>
+          合計投票数 <font color="red">　<strong> {{ns.minor_cnt}} </strong></font>票です <br>
+          （参考）最適だと思われた投票数 <font color="blue">　<strong> {{ns.major_cnt}} </strong></font>票です <br>  
+
+<div class="balloon2-left">
+  <b>選択肢5：{{Vari.ans5}}</b>
+ </div>
+<br>
+          一番ありえないと思って投票した人は→　
+          {% set ns = namespace(minor_cnt=0,major_cnt=0) %}
+          {% for member in MemberList_DB %}
+                
+              {% if  member.to_vote_minor == 4  %}
+              {% set ns.minor_cnt = ns.minor_cnt + 1 %}
               <font color="blue"> {{ member.username }}</font>さん
               {% endif %}
-    {% endfor %}
-    <br>
-    合計投票数 <font color="blue">　<strong> {{ns.cnt}} </strong></font>票です <br><br> 
-
-
-
+            
+              {% if  member.to_vote_major == 4  %}
+              {% set ns.major_cnt = ns.major_cnt + 1 %}
+              {% endif %}
+                      
+          {% endfor %}
+          <br>
+          合計投票数 <font color="red">　<strong> {{ns.minor_cnt}} </strong></font>票です <br>
+          （参考）最適だと思われた投票数 <font color="blue">　<strong> {{ns.major_cnt}} </strong></font>票です <br> 
 
 {% endfor %}
 
-
-
   <br>
   <br>
 
-今回のウルフの人は
-  {% for member3 in MemberList_DB %}
-  {% if  member3.ulf_flg ==  1  %}
-  <strong> {{ member3.username}} </strong> さん
-  {% endif %}
-  {% endfor %}
-
-  でした！
-
-  <br>
-
-
-
-
-<a href="{{ url_for('game_repeat') }}"><p>同じメンバーで続ける</p></a>
+<a href="{{ url_for('game_repeat') }}"><p><u><b>同じメンバーで続けるはここをクリック</b></u></p></a>
 
 {% endblock %}

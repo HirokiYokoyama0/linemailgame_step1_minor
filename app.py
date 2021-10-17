@@ -315,7 +315,7 @@ def vote_result():
 
     OtherVari = db2.session.query(OtherVar).all()
     
-    return render_template('vote_result.html',MemberList_DB = MemberList_DB,OtherVari=OtherVari,myname = myname)
+    return render_template('vote_result.html',MemberList_DB = MemberList_DB,OtherVari=OtherVari,mainmail = OtherVari[0].mainmail,myname = myname)
 
 
 ## ゲーム継続　→　メンバー一覧ページ　
